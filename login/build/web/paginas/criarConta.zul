@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <window width="500px" height="400px" position="center" mode="overlapped">
+        <grid zclass="none">
+            <columns>
+                <column style="background: #f05e23;color: #ffffff;">
+                    <label id="tit" style="font-weight:bold;font-size:30pt" value="Registar" width="100px"/>
+                </column>
+                <column style="background: #f05e23;">
+                </column>
+            </columns>
+            <rows>
+                <row>	
+                    <label id="lb1" style="font-weight:bold;font-size:15pt" value="Utilizador:"/>
+                    <textbox id="user" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>	
+                    <label id="lb2" style="font-weight:bold;font-size:15pt" value="Data de Nascimento:"/>
+                    <textbox id="db" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>	
+                    <label id="lb3" style="font-weight:bold;font-size:15pt" value="Contacto Telefónico:"/>
+                    <textbox id="tele" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>	
+                    <label id="lb4" style="font-weight:bold;font-size:15pt" value="Email:"/>
+                    <textbox id="email" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>	
+                    <label id="lb5" style="font-weight:bold;font-size:15pt" value="Password:"/>
+                    <textbox id="pass" type="password" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>
+                    <cell colspan="2"  align="center">
+                        <button label="Registar" style="font-weight:bold;font-size:13 pt;background: #f05e23;color: #ffffff" onClick="submit()" width="200px" height="40px"></button>
+                    </cell>
+                </row>
+            </rows>
+        </grid>
+        <zscript>{
+            import java.sql.*;
+            import org.zkoss.zk.ui.Executions;
+            void submit() {
+            try{
+            Class.forName("com.mysql.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/mydb";
+            Connection con = DriverManager.getConnection(url,"root", "");
+            String utilizador=user.getValue();
+            String dataNasc=db.getValue();
+            String contact=tele.getValue();
+            String corrElect=email.getValue();
+            String password=pass.getValue();
+            if(utilizador.equals("") || dataNasc.equals("") || contact.equals("") || corrElect.equals("") || password.equals("")){
+            Messagebox.show("Preencha todos os campos");
+            }else{
+            PreparedStatement stmt = con.prepareStatement("INSERT INTO utilizadores values(?,?,?,?,?,?)");
+            stmt.setString(1, null);
+            stmt.setString(2, utilizador);
+            stmt.setString(3, dataNasc);
+            stmt.setString(4, contact);
+            stmt.setString(5, corrElect);
+            stmt.setString(6, password);
+            stmt.executeUpdate();
+            con.close();
+            Messagebox.show("Registo com sucesso", 
+            "Registo", Messagebox.OK,
+            null,
+            new org.zkoss.zk.ui.event.EventListener(){
+            public void onEvent(Event e){
+            if(Messagebox.ON_OK.equals(e.getName())){
+            Executions.sendRedirect("login.zul");
+            }
+            }
+            }
+            );
+            
+            
+            
+            }
+            
+            }catch (ClassNotFoundException ex) {
+            Messagebox.show("Erro com o Driver");
+            } catch (SQLException ex) {
+            Messagebox.show("Erro a inserir");
+            } catch (IOException ex) {
+            Messagebox.show("Erro algo");
+            }
+            
+            }
+
+            }</zscript>
+    </window>
+</zk>

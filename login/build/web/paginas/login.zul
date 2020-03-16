@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <window width="500px" height="250px" position="center" mode="overlapped">
+        <grid zclass="none">
+            <columns>
+                <column style="background: #f05e23;color: #ffffff;">
+                    <label id="tit" style="font-weight:bold;font-size:30pt" value="Login" width="100px"/>
+                </column>
+                <column style="background: #f05e23;">
+                </column>
+            </columns>
+            <rows>
+                <row>	
+                    <label id="lb1" style="font-weight:bold;font-size:15pt" value="Utilizador:"/>
+                    <textbox id="user" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>	
+                    <label id="lb2" style="font-weight:bold;font-size:15pt" value="Password:"/>
+                    <textbox id="pass" type="password" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>
+                    <cell colspan="2"  align="center">
+                        <button label="Login" style="font-weight:bold;font-size:13 pt;background: #f05e23;color: #ffffff" onClick="submit()" width="200px" height="40px"></button>
+                    </cell>
+                </row>
+            </rows>
+        </grid>
+        <zscript>{
+            import java.sql.*;
+            void submit() {
+            Class.forName("com.mysql.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/mydb";
+            Connection con = DriverManager.getConnection(url,"root", "");
+            String nome= user.getValue();
+            String password=pass.getValue();
+            try {
+            PreparedStatement pstm = con.prepareStatement("SELECT password FROM utilizadores where nome=?");
+            pstm.setString(1, nome);
+            ResultSet rs = pstm.executeQuery();
+            if (rs.next()) {
+            passwordDB = rs.getString(1);
+            if (password.equals(passwordDB)) {
+            Executions.getCurrent().setAttribute("key1", "val1");
+            Executions.sendRedirect("amostraDados.zul"); 
+            //Executions.getCurrent().forward("amostraDados.zul");
+            //         
+            } else {
+            Messagebox.show("Password errada");
+            }
+            } else {
+            Messagebox.show("Nome de utilizador errado");
+            }
+            } catch (SQLException ex) {
+            Messagebox.show("Preencha todos os campos");
+            }
+            con.close();
+            }
+
+            }</zscript>
+    </window>
+</zk>

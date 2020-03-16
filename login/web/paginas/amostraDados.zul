@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="mostra"?>
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    
+    
+    <window width="500px" height="250px" position="center" mode="overlapped" viewModel="@init(mostra)">
+        <zscript>{
+            import java.sql.*;
+            public class mostra{
+            public void mostra(){
+            Class.forName("com.mysql.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/mydb";
+            Connection con = DriverManager.getConnection(url,"root", "");
+            try {
+            String nome=Executions.getCurrent().getAttribute("key");
+            Messagebox.show(nome);
+            PreparedStatement pstm = con.prepareStatement("SELECT * FROM utilizadores where nome=?");
+            pstm.setString(1, nome);
+            ResultSet rs = pstm.executeQuery();
+            while (rs.next()) {
+            cod.setValue(rs.getString(1));
+            nome.setValue(rs.getString(2));
+            dn.setValue(rs.getString(3));
+            tele.setValue(rs.getString(4));
+            email.setValue(rs.getString(5));
+            pass.setValue(rs.getString(6));
+            }
+            } catch (SQLException ex) {
+            Messagebox.show("Preencha todos os campos");
+            }
+            con.close();
+            }
+            }
+            }</zscript>
+        <grid zclass="none">
+            <columns>
+                <column style="background: #f05e23;color: #ffffff;">
+                    <label id="tit" style="font-weight:bold;font-size:30pt" value="Conta" width="100px"/>
+                </column>
+                <column style="background: #f05e23;">
+                </column>
+            </columns>
+            <rows>
+                <row>	
+                    <label id="lb1" style="font-weight:bold;font-size:15pt" value="Código:"/>
+                    <textbox id="cod" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>	
+                    <label id="lb2" style="font-weight:bold;font-size:15pt" value="Nome:"/>
+                    <textbox id="nome" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>	
+                    <label id="lb3" style="font-weight:bold;font-size:15pt" value="Data de Nascimento:"/>
+                    <textbox id="dn" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>	
+                    <label id="lb4" style="font-weight:bold;font-size:15pt" value="Contacto Telefónico:"/>
+                    <textbox id="tele" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>	
+                    <label id="lb5" style="font-weight:bold;font-size:15pt" value="Email:"/>
+                    <textbox id="email" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>	
+                    <label id="lb6" style="font-weight:bold;font-size:15pt" value="Password:"/>
+                    <textbox id="pass" width="150px" height="30px" style="font-size:12pt"/>
+                </row>
+                <row>
+                    <cell colspan="2"  align="center">
+                        <button label="Login" style="font-weight:bold;font-size:13 pt;background: #f05e23;color: #ffffff" onClick="submit()" width="200px" height="40px"></button>
+                    </cell>
+                </row>
+            </rows>
+        </grid>
+    </window>
+</zk>
