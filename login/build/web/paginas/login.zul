@@ -41,10 +41,9 @@
             if (rs.next()) {
             passwordDB = rs.getString(1);
             if (password.equals(passwordDB)) {
-            Executions.getCurrent().setAttribute("key1", "val1");
-            Executions.sendRedirect("amostraDados.zul"); 
-            //Executions.getCurrent().forward("amostraDados.zul");
-            //         
+            //Executions.getCurrent().setAttribute("key1", "val1");
+            Messagebox.show("Login com sucesso");
+            //Executions.sendRedirect("amostraDados.zul");         
             } else {
             Messagebox.show("Password errada");
             }
